@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Check, ChevronRight, MapPin, QrCode, Sparkles, Users } from 'lucide-react'
 import hotpot from '@/assets/hotpot.jpg'
 import { Button } from '@/components/ui/button'
+import { getRecommendedProducts } from '@/data/menu'
+import { money } from '@/lib/utils'
 
 const tableOptions = [
   { code: 'A08', areaKey: 'bind.area.hall', seats: 4 },
@@ -14,11 +16,12 @@ interface HomeViewProps { onBind: (table: string) => void }
 
 export function HomeView({ onBind }: HomeViewProps) {
   const { t } = useTranslation()
+  const recommended = getRecommendedProducts()
   return (
-    <main className="relative min-h-screen overflow-hidden bg-rice-100 paper-noise">
+    <main className="relative flex min-h-screen flex-col overflow-hidden bg-rice-100 paper-noise">
       <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
       <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-amber-100 blur-3xl" />
-      <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 px-5 py-10 lg:grid-cols-2 lg:px-10">
+      <div className="relative mx-auto grid max-w-6xl flex-1 items-center gap-8 px-5 py-6 lg:grid-cols-2 lg:px-10 lg:py-8">
         <section className="animate-rise">
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-chili-500/20 bg-white/80 px-3 py-2 text-xs font-bold text-chili-600 shadow-sm">
             <Sparkles size={14} /> {t('common.concept_badge')}
@@ -61,6 +64,39 @@ export function HomeView({ onBind }: HomeViewProps) {
           <Button onClick={() => onBind('A08')} className="mt-4 w-full"><MapPin size={17} />{t('bind.quick_enter')}</Button>
         </section>
       </div>
+
+      <section className="relative mx-auto w-full max-w-6xl px-5 pb-8 lg:px-10">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-extrabold text-charcoal-900">
+            <Sparkles size={18} className="text-chili-500" />
+            {t('home.recommend.title')}
+          </h2>
+        </div>
+        {recommended.length === 0 ? (
+          <p className="rounded-2xl border border-charcoal-900/5 bg-white/80 p-6 text-center text-sm text-charcoal-500">{t('home.recommend.empty')}</p>
+        ) : (
+          <div className="scrollbar-none -mx-1 flex gap-3 overflow-x-auto px-1 pb-2 sm:grid sm:grid-cols-4 sm:overflow-visible">
+            {recommended.map((product, index) => (
+              <button
+                key={product.id}
+                onClick={() => onBind('A08')}
+                className="group animate-rise w-44 shrink-0 overflow-hidden rounded-2xl border border-charcoal-900/5 bg-white text-left shadow-card transition hover:-translate-y-1 hover:border-chili-500 sm:w-auto sm:shrink"
+                style={{ animationDelay: `${index * 40}ms` }}
+              >
+                <div className="relative h-24 overflow-hidden sm:h-28">
+                  <img src={product.image} alt={t(product.name)} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/45 to-transparent" />
+                  {product.badge && <span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-0.5 text-xs font-extrabold text-charcoal-900">{t(product.badge)}</span>}
+                </div>
+                <div className="p-3">
+                  <h3 className="line-clamp-1 font-bold text-charcoal-900">{t(product.name)}</h3>
+                  <p className="mt-1 text-lg font-extrabold text-chili-500">{money(product.price)}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   )
 }
