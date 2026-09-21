@@ -1,21 +1,14 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('首页推荐菜模块 - E2E 验收测试', () => {
-  test('REQ-001 & REQ-002: 首页首屏推荐菜区域可见，展示标题和最多4张含名称/价格/badge的推荐菜卡片', async ({ page }) => {
+  test('REQ-001 & REQ-002: 推荐菜区域展示标题和最多4张含名称/价格/badge的卡片', async ({ page }) => {
     await page.goto('/')
 
     // 推荐菜区域标题可见
     await expect(page.getByRole('heading', { name: '今日推荐' })).toBeVisible()
 
-    // 推荐菜区域在首屏可见（无需滚动，元素在视口内）
-    const recommendSection = page.locator('section', { hasText: '今日推荐' }).first()
-    await expect(recommendSection).toBeVisible()
-    const box = await recommendSection.boundingBox()
-    expect(box).not.toBeNull()
-    // 在默认 1280x720 视口下，推荐菜区域顶部应在视口内
-    expect(box!.y).toBeLessThan(720)
-
     // 展示 4 张推荐菜卡片（带 badge 的菜品：p1/p2/p3/p5）
+    const recommendSection = page.locator('section', { hasText: '今日推荐' }).first()
     const recommendCards = recommendSection.locator('button:has(h3)')
     await expect(recommendCards).toHaveCount(4)
 
@@ -30,6 +23,11 @@ test.describe('首页推荐菜模块 - E2E 验收测试', () => {
       await expect(card.locator('p')).toHaveText(expectedPrices[i])
       await expect(card.locator('span.bg-amber-400')).toHaveText(expectedBadges[i])
     }
+
+    // REQ-001.3: 推荐菜区域应在首屏可见（above the fold，1280x720 视口下）
+    const box = await recommendSection.boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.y).toBeLessThan(720)
   })
 
   test('REQ-003: 点击推荐菜卡片自动绑桌 A08 并跳转到欢迎页', async ({ page }) => {
