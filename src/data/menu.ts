@@ -67,3 +67,8 @@ export const products: Product[] = [
 ]
 
 export const getProduct = (id: string) => products.find((product) => product.id === id)
+
+/** 筛选带 badge 标签的菜品作为推荐菜，最多取 max 个 */
+export function getRecommendedProducts(max = 4): Product[] {
+  return products.filter((product) => product.badge).slice(0, max)
+}

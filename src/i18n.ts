@@ -63,6 +63,12 @@ const resources = {
           window: '窗边',
         },
       },
+      home: {
+        recommend: {
+          title: '今日推荐',
+          empty: '暂无推荐菜品',
+        },
+      },
       welcome: {
         badge: '欢迎光临',
         title: '欢迎光临沸点！',
@@ -299,6 +305,12 @@ const resources = {
           booth: 'Booth',
           room: 'Private Room',
           window: 'Window Seat',
+        },
+      },
+      home: {
+        recommend: {
+          title: "Today's Picks",
+          empty: 'No recommendations available',
         },
       },
       welcome: {
