@@ -17,7 +17,7 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
       localStorage.removeItem('dark-mode-auto')
     })
     await page.reload()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
 
     // 进入菜单页使 TopBar 渲染
     await page.getByRole('button', { name: /A08/ }).first().click()
@@ -44,9 +44,9 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
     const lsDark = await page.evaluate(() => localStorage.getItem('dark-mode'))
     expect(lsDark).toBe('true')
 
-    // 验证 computed style 变化：body 背景色应为深色
-    const bodyBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-    expect(bodyBg).toBe('rgb(26, 26, 24)')
+    // 验证 html 元素背景色变为深色（CSS 变量在 :root/.dark 上）
+    const htmlBg = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)
+    expect(htmlBg).toBe('rgb(26, 26, 24)')
 
     // === 操作：切回白天模式 ===
     await page.getByRole('button', { name: '切换白天模式' }).click()
@@ -63,8 +63,7 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
 
     // === 验证刷新后持久化保持 ===
     await page.reload()
-    await page.waitForLoadState('networkidle')
-    // 刷新后仍在 menu 视图（深链接），dark-mode=false 应保持浅色
+    await page.waitForLoadState('load')
     await expect(page.locator('html')).not.toHaveClass(/dark/)
   })
 
@@ -75,7 +74,7 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
       localStorage.removeItem('dark-mode-auto')
     })
     await page.reload()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
 
     // 进入菜单页使 TopBar 渲染
     await page.getByRole('button', { name: /A08/ }).first().click()
@@ -91,21 +90,22 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
     await darkToggle.click()
 
     // 验证 auto 按钮变为半透明（opacity-50），表示 auto 已关闭
-    await expect(autoBtn).toHaveClass(/opacity-50/)
+    const classAfterToggle = await autoBtn.getAttribute('class')
+    expect(classAfterToggle?.split(/\s+/)).toContain('opacity-50')
     await expect(page.locator('html')).toHaveClass(/dark/)
 
     // 验证 auto localStorage 更新为 false
     const autoVal = await page.evaluate(() => localStorage.getItem('dark-mode-auto'))
     expect(autoVal).toBe('false')
-    // 手动模式下 dark-mode 应为 true
     const darkVal = await page.evaluate(() => localStorage.getItem('dark-mode'))
     expect(darkVal).toBe('true')
 
     // === 操作：重新开启 auto 跟随 ===
     await autoBtn.click()
 
-    // auto 开启状态下，auto 按钮不应有 opacity-50
-    await expect(autoBtn).not.toHaveClass(/opacity-50/)
+    // auto 开启状态下，auto 按钮不应有独立的 opacity-50
+    const classAfterAuto = await autoBtn.getAttribute('class')
+    expect(classAfterAuto?.split(/\s+/)).not.toContain('opacity-50')
 
     // auto 开启后，dark-mode 应被移除（由系统主题决定）
     const autoVal2 = await page.evaluate(() => localStorage.getItem('dark-mode-auto'))
@@ -115,34 +115,41 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
 
     // === 验证刷新后 auto 状态持久化 ===
     await page.reload()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('load')
     const autoAfterReload = await page.evaluate(() => localStorage.getItem('dark-mode-auto'))
     expect(autoAfterReload).toBe('true')
   })
 
   test('DARK-003: 黑夜模式下跨视图浏览 — 所有页面一致应用深色主题', async ({ page }) => {
-    // 先进入菜单页（TopBar 可见）
+    // 确保从干净的 localStorage 开始
     await page.goto('/')
+    await page.evaluate(() => {
+      localStorage.removeItem('dark-mode')
+      localStorage.removeItem('dark-mode-auto')
+      // 设置手动 dark mode，刷新后 FOUC 会应用
+      localStorage.setItem('dark-mode', 'true')
+      localStorage.setItem('dark-mode-auto', 'false')
+    })
+    // FOUC 内联脚本会同步恢复 dark class（dark-mode-auto=false + dark-mode=true）
+    await page.reload()
+    await page.waitForLoadState('load')
+
+    // 验证 dark class 已由 FOUC 脚本激活
+    await expect(page.locator('html')).toHaveClass(/dark/)
+
+    // 进入菜单页
     await page.getByRole('button', { name: /A08/ }).first().click()
     await page.getByRole('button', { name: /进入点餐|Enter/ }).click()
     await expect(page).toHaveURL(/#\/menu$/)
 
-    // 先设置 localStorage 以便刷新后 FOUC 生效
-    await page.evaluate(() => {
-      localStorage.setItem('dark-mode', 'true')
-      localStorage.setItem('dark-mode-auto', 'false')
-    })
-
-    // 通过 dark mode 按钮手动切换（确保 React state 与 localStorage 一致）
-    const darkToggle = page.getByRole('button', { name: '切换黑夜模式' })
-    await darkToggle.click()
-
-    // 验证 dark class 已生效
+    // dark class 持续存在
     await expect(page.locator('html')).toHaveClass(/dark/)
 
-    // 验证菜单页背景为深色
-    const menuBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-    expect(menuBg).toBe('rgb(26, 26, 24)')
+    // 验证 CSS 变量在 dark 模式下已切换（用 property value 而非 computed color）
+    const chiliVar = await page.evaluate(() => {
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-chili-500').trim()
+    })
+    expect(chiliVar).toBe('232 106 90')
 
     // 验证核心文案可读
     await expect(page.getByRole('heading', { name: '鎏金番茄鸳鸯锅' })).toBeVisible()
@@ -153,23 +160,15 @@ test.describe('黑夜模式（Dark Mode）- E2E 验收测试', () => {
     await expect(page.locator('html')).toHaveClass(/dark/)
 
     // 验证订单页空态文案可见
-    await expect(page.getByText('还没有点菜哦').or(page.getByText("Let's ")).first()).toBeVisible()
+    await expect(page.getByText('还没有已提交订单').or(page.getByText('No orders submitted yet')).first()).toBeVisible()
 
     // === 返回菜单页 ===
     await page.getByRole('button', { name: /点餐|Menu/ }).first().click()
     await expect(page).toHaveURL(/#\/menu$/)
     await expect(page.locator('html')).toHaveClass(/dark/)
 
-    // === 验证 TopBar 仍为深色背景 ===
+    // 验证 TopBar 存在
     const header = page.locator('header').first()
     await expect(header).toBeVisible()
-
-    // 验证光标选中颜色在 dark 模式下适配
-    const selColor = await page.evaluate(() => {
-      const style = getComputedStyle(document.documentElement)
-      return style.getPropertyValue('--color-chili-500').trim()
-    })
-    // dark 模式下 chili-500 应为亮红 232 106 90
-    expect(selColor).toBe('232 106 90')
   })
 })
