@@ -13,6 +13,7 @@ import { ServiceSheet } from '@/components/ServiceSheet'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { useDarkMode } from '@/hooks/useDarkMode'
 import { useElderlyMode } from '@/hooks/useElderlyMode'
 import { initialViewFromHash, useViewRoute } from '@/hooks/useViewRoute'
 import { orderReducer, initialState } from '@/state/orderReducer'
@@ -50,6 +51,7 @@ export default function App() {
   const { t, i18n } = useTranslation()
   const [state, dispatch] = useReducer(orderReducer, undefined, createInitialState)
   const { enabled: elderly, toggle: toggleElderly } = useElderlyMode()
+  const { enabled: darkMode, auto: darkAuto, toggle: toggleDark, setAuto: setDarkAuto } = useDarkMode()
   const [serviceOpen, setServiceOpen] = useState(false)
   const [consoleOpen, setConsoleOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
@@ -85,6 +87,14 @@ export default function App() {
     toggleElderly()
     dispatch({ type: 'SET_MESSAGE', message: elderly ? '已切换为常规模式' : '已切换为老人模式' })
   }
+  const handleToggleDark = () => {
+    toggleDark()
+    dispatch({ type: 'SET_MESSAGE', message: darkMode ? t('common.dark_off') : t('common.dark_on') })
+  }
+  const handleToggleDarkAuto = () => {
+    setDarkAuto(!darkAuto)
+    dispatch({ type: 'SET_MESSAGE', message: darkAuto ? t('common.dark_auto_off') : t('common.dark_auto_on') })
+  }
 
   if (state.view === 'home' || !state.table) {
     return <HomeView onBind={(table) => dispatch({ type: 'BIND_TABLE', table })} />
@@ -102,8 +112,12 @@ export default function App() {
         serviceCount={waitingServices}
         language={i18n.language}
         elderly={elderly}
+        darkMode={darkMode}
+        darkAuto={darkAuto}
         onToggleLanguage={toggleLanguage}
         onToggleElderly={handleToggleElderly}
+        onToggleDark={handleToggleDark}
+        onToggleDarkAuto={handleToggleDarkAuto}
         onView={changeView}
         onService={() => setServiceOpen(true)}
         onConsole={() => setConsoleOpen(true)}

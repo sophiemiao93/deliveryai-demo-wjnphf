@@ -8,12 +8,26 @@
     <title>沸点 · 火锅点单概念演示</title>
     <script>
       (function () {
-        // 同步设置初始语言到 html lang 属性
         try {
+          // 同步设置初始语言
           var lang = localStorage.getItem('i18nextLng');
           document.documentElement.lang = (lang === 'en') ? 'en' : 'zh-CN';
+
+          // 同步设置黑夜模式（防止 FOUC）
+          var darkMode = localStorage.getItem('dark-mode');
+          var autoDark = localStorage.getItem('dark-mode-auto');
+          // 默认自动跟随系统
+          if (autoDark !== 'false') {
+            // auto-follow 开启时，检查系统主题
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              document.documentElement.classList.add('dark');
+            }
+          } else if (darkMode === 'true') {
+            // 手动模式且值为 dark
+            document.documentElement.classList.add('dark');
+          }
         } catch (e) {
-          // localStorage 不可用时保持默认中文
+          // localStorage 不可用时保持默认浅色
         }
       })();
     </script>
