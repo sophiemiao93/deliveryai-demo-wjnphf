@@ -1,4 +1,4 @@
-import { Accessibility, Crown, Languages, LayoutDashboard, MapPin, PhoneCall, ReceiptText, Search, UserRound } from 'lucide-react'
+import { Accessibility, Crown, Languages, LayoutDashboard, MapPin, Moon, PhoneCall, ReceiptText, Search, Sun, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
@@ -11,14 +11,18 @@ interface TopBarProps {
   serviceCount: number
   language: string
   elderly: boolean
+  darkMode: boolean
+  darkAuto: boolean
   onToggleLanguage: () => void
   onToggleElderly: () => void
+  onToggleDark: () => void
+  onToggleDarkAuto: () => void
   onView: (view: ViewName) => void
   onService: () => void
   onConsole: () => void
 }
 
-export function TopBar({ table, view, serviceCount, language, elderly, onToggleLanguage, onToggleElderly, onView, onService, onConsole }: TopBarProps) {
+export function TopBar({ table, view, serviceCount, language, elderly, darkMode, darkAuto, onToggleLanguage, onToggleElderly, onToggleDark, onToggleDarkAuto, onView, onService, onConsole }: TopBarProps) {
   const { t } = useTranslation()
   const areaKey = tableAreas[table]
   const tableLabel = areaKey ? `${table} · ${t(areaKey)}` : table
@@ -58,6 +62,32 @@ export function TopBar({ table, view, serviceCount, language, elderly, onToggleL
           <Button variant="outline" size="icon" onClick={onConsole} aria-label={t('common.aria_console')}><LayoutDashboard size={18} /></Button>
           <Button variant="outline" size="icon" onClick={onToggleElderly} aria-label={elderly ? '切换至常规模式' : '切换至老人模式'}>
             <Accessibility size={18} className={elderly ? 'text-chili-500' : ''} />
+          </Button>
+          {/* 黑夜模式切换 */}
+          <Button variant="outline" size="icon" onClick={onToggleDark} aria-label={darkMode ? t('common.aria_light') : t('common.aria_dark')}>
+            {darkMode ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+          </Button>
+          {/* 系统跟随切换 */}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onToggleDarkAuto}
+            aria-label={t('common.aria_auto_dark')}
+            title={darkAuto ? t('common.dark_auto_on') : t('common.dark_auto_off')}
+            className={darkAuto ? 'text-chili-500' : 'opacity-50'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="3" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
           </Button>
           <Button variant="outline" size="sm" onClick={onToggleLanguage} aria-label={t('common.aria_lang')}>
             <Languages size={16} />{language === 'zh' ? 'EN' : '中'}

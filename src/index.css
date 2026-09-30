@@ -3,26 +3,90 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color: #211f1c; background: #fbf5ea; font-synthesis: none; }
+/* ── 浅色主题色板（CSS 变量） ───────────────────────────── */
+:root {
+  --color-rice-50: 255 253 248;
+  --color-rice-100: 251 245 234;
+  --color-rice-200: 243 230 208;
+  --color-chili-50: 255 241 239;
+  --color-chili-100: 255 221 216;
+  --color-chili-500: 225 59 43;
+  --color-chili-600: 201 47 33;
+  --color-chili-700: 169 35 26;
+  --color-amber-100: 255 242 199;
+  --color-amber-400: 245 184 63;
+  --color-amber-500: 230 155 24;
+  --color-charcoal-500: 95 91 85;
+  --color-charcoal-700: 52 49 45;
+  --color-charcoal-900: 33 31 28;
+  --shadow-card: 0 10px 30px rgba(70, 45, 25, 0.08);
+  --shadow-float: 0 18px 55px rgba(78, 34, 20, 0.18);
+  color: #211f1c;
+  background: #fbf5ea;
+  font-synthesis: none;
+}
+
+/* ── 黑夜模式色板覆盖 ──────────────────────────────────── */
+.dark {
+  --color-rice-50: 42 42 38;
+  --color-rice-100: 26 26 24;
+  --color-rice-200: 51 51 46;
+  --color-chili-50: 62 30 28;
+  --color-chili-100: 82 40 36;
+  --color-chili-500: 232 106 90;
+  --color-chili-600: 240 122 106;
+  --color-chili-700: 249 140 124;
+  --color-amber-100: 62 50 20;
+  --color-amber-400: 245 184 63;
+  --color-amber-500: 230 155 24;
+  --color-charcoal-500: 168 164 156;
+  --color-charcoal-700: 200 196 188;
+  --color-charcoal-900: 240 236 228;
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 18px 55px rgba(0, 0, 0, 0.45);
+  color: #f0ece4;
+  background: #1a1a18;
+}
+
+/* ── 基础重置 ────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: #fbf5ea; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
 button, input { font: inherit; }
 ::selection { background: #ffddd8; color: #a9231a; }
+.dark ::selection { background: #522824; color: #f98c7c; }
 
-/* 老人模式全局基础：放大字号约 1.25 倍 */
+/* ── 老人模式 ────────────────────────────────────────────── */
 .elderly { font-size: 125%; }
-
-/* 老人模式：增强对比度，提升半透明文字不透明度至 WCAG AA（≥ 4.5:1） */
 .elderly .text-rice-200\/40 { color: rgb(243 230 208 / 0.8); }
 .elderly .text-rice-200\/60 { color: rgb(243 230 208 / 0.9); }
 .elderly .text-white\/30 { color: rgb(255 255 255 / 0.75); }
 .elderly .text-white\/40 { color: rgb(255 255 255 / 0.8); }
-
-/* 老人模式：主要交互元素触控区域 ≥ 44px */
 .elderly button { min-height: 2.2rem; }
 
-/* 界面状态切换平滑过渡 */
+/* ── 黑夜模式：背景白色 → 深色表面 ──────────────────────── */
+.dark .bg-white {
+  background-color: rgb(42 42 38 / 1);
+}
+.dark .bg-white\/80 {
+  background-color: rgb(42 42 38 / 0.8);
+}
+.dark .bg-white\/90 {
+  background-color: rgb(42 42 38 / 0.9);
+}
+.dark .bg-white\/95 {
+  background-color: rgb(42 42 38 / 0.95);
+}
+.dark .bg-white\/55 {
+  background-color: rgb(42 42 38 / 0.55);
+}
+
+/* ── 黑夜模式：纸纹纹理 ──────────────────────────────────── */
+.dark .paper-noise {
+  background-image: radial-gradient(rgba(200, 180, 150, 0.05) 0.7px, transparent 0.7px);
+}
+
+/* ── 过渡 ────────────────────────────────────────────────── */
 html { transition: background-color 250ms ease, color 250ms ease, font-size 250ms ease; }
 html * {
   transition-property: background-color, border-color, color, fill, stroke, font-size;
@@ -30,6 +94,7 @@ html * {
   transition-timing-function: ease;
 }
 
+/* ── 工具类 ──────────────────────────────────────────────── */
 @layer utilities {
   .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
   .paper-noise {
