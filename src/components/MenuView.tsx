@@ -245,10 +245,10 @@ export function MenuView({ diners, soldOut, onAdd }: MenuViewProps) {
 
   return (
     <section className="min-w-0">
-      <div className="relative overflow-hidden rounded-3xl bg-charcoal-900 p-5 text-white shadow-card sm:p-7">
+      <div className="relative overflow-hidden rounded-3xl bg-charcoal-900 p-5 text-white dark:bg-rice-50 dark:text-charcoal-900 shadow-card sm:p-7">
         <div className="absolute -right-10 -top-20 h-56 w-56 rounded-full bg-chili-500/30 blur-3xl" />
         <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div><span className="flex items-center gap-2 text-xs font-bold text-amber-400"><Sparkles size={14} />{t('menu.hero_badge')}</span><h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{t('menu.hero_title')}</h1><p className="mt-2 text-sm text-rice-200">{t('menu.hero_diners', { count: diners.length })}</p></div>
+          <div><span className="flex items-center gap-2 text-xs font-bold text-amber-400"><Sparkles size={14} />{t('menu.hero_badge')}</span><h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{t('menu.hero_title')}</h1><p className="mt-2 text-sm text-rice-200 dark:text-charcoal-500">{t('menu.hero_diners', { count: diners.length })}</p></div>
           <div className="flex -space-x-2">{diners.map((name, index) => <span key={name} title={name} className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-charcoal-900 text-xs font-bold ${index === 0 ? 'bg-chili-500' : index === 1 ? 'bg-amber-400 text-charcoal-900' : 'bg-rice-200 text-charcoal-900'}`}>{name.slice(0, 1)}</span>)}</div>
         </div>
       </div>
