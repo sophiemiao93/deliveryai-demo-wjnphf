@@ -100,6 +100,7 @@ const resources = {
         select_spicy: '选择辣度',
         who_ordered: '谁点了',
         add_to_cart: '加入本桌购物车',
+        assist_hint: '点击菜品卡片选择规格并加入购物车',
         super_spicy_warning_title: '风险提示',
         super_spicy_warning: '您选择的「超级辣」辣度极高，可能对您的肠胃造成明显不适。请确认您能接受此辣度后再继续下单。',
         super_spicy_confirm: '我已了解，继续下单',
@@ -177,6 +178,7 @@ const resources = {
         total: '菜品合计',
         view_detail: '查看明细',
         checkout: '去结账',
+        assist_hint: '可在此查看订单进度或取消订单',
         ordered_by: '{{name}} 点了',
         stage: {
           submitted: { label: '订单已提交', note: '19:28' },
@@ -354,6 +356,7 @@ const resources = {
         select_spicy: 'Select Spice Level',
         who_ordered: 'Who ordered?',
         add_to_cart: 'Add to Table Cart',
+        assist_hint: 'Tap a dish card to pick options and add to cart',
         super_spicy_warning_title: 'Risk Warning',
         super_spicy_warning: 'The "Super Hot" spice level is extremely high and may cause significant discomfort to your stomach. Please confirm you can handle this spice level before continuing.',
         super_spicy_confirm: 'I understand, continue ordering',
@@ -431,6 +434,7 @@ const resources = {
         total: 'Total',
         view_detail: 'View Details',
         checkout: 'Checkout',
+        assist_hint: 'View order progress or cancel items here',
         ordered_by: 'Ordered by {{name}}',
         stage: {
           submitted: { label: 'Order Submitted', note: '19:28' },

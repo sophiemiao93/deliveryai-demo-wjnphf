@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, Check, Flame, Plus, Search, Sparkles, Users, X } from 'lucide-react'
+import { AlertTriangle, Check, Flame, Info, Plus, Search, Sparkles, Users, X } from 'lucide-react'
 import { categories, products } from '@/data/menu'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -373,6 +373,12 @@ export function MenuView({ diners, soldOut, onAdd }: MenuViewProps) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* 老人模式辅助提示 */}
+      <div className="elderly-assist-hint mt-3">
+        <Info size={18} className="shrink-0" />
+        <span>{t('menu.assist_hint')}</span>
       </div>
 
       {/* ── Search results or default list ───────────────────────── */}

@@ -19,8 +19,8 @@ export function HomeView({ onBind }: HomeViewProps) {
   const recommended = getRecommendedProducts()
   return (
     <main className="relative overflow-hidden bg-rice-100 paper-noise">
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
-      <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-amber-100 blur-3xl" />
+      <div className="elderly-hide absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
+      <div className="elderly-hide absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-amber-100 blur-3xl" />
       <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-5 py-4 lg:grid-cols-2 lg:px-10 lg:py-5">
         <section className="animate-rise">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-chili-500/20 bg-white/80 px-3 py-2 text-xs font-bold text-chili-600 shadow-sm">

@@ -16,8 +16,8 @@ export function WelcomeView({ table, onEnter }: WelcomeViewProps) {
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-rice-100 paper-noise">
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
-      <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-amber-100 blur-3xl" />
+      <div className="elderly-hide absolute -right-24 -top-24 h-72 w-72 rounded-full bg-chili-100 blur-3xl" />
+      <div className="elderly-hide absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-amber-100 blur-3xl" />
 
       <div className="relative mx-auto w-full max-w-md px-5 py-10">
         <section className="animate-rise overflow-hidden rounded-3xl border border-white/80 bg-white/90 shadow-float backdrop-blur">

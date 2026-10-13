@@ -57,12 +57,42 @@ button, input { font: inherit; }
 .dark ::selection { background: #522824; color: #f98c7c; }
 
 /* ── 老人模式 ────────────────────────────────────────────── */
-.elderly { font-size: 125%; }
-.elderly .text-rice-200\/40 { color: rgb(243 230 208 / 0.8); }
+.elderly { font-size: 150%; }
+
+/* 高对比度：提升弱透明度文字至 ≥ 0.8 */
+.elderly .text-white\/30 { color: rgb(255 255 255 / 0.85); }
+.elderly .text-white\/40 { color: rgb(255 255 255 / 0.85); }
+.elderly .text-rice-200\/40 { color: rgb(243 230 208 / 0.85); }
 .elderly .text-rice-200\/60 { color: rgb(243 230 208 / 0.9); }
-.elderly .text-white\/30 { color: rgb(255 255 255 / 0.75); }
-.elderly .text-white\/40 { color: rgb(255 255 255 / 0.8); }
-.elderly button { min-height: 2.2rem; }
+.elderly .opacity-50 { opacity: 1; }
+.elderly .opacity-80 { opacity: 1; }
+
+/* 放大按钮最小高度与关键操作图标尺寸 */
+.elderly button { min-height: 2.8rem; }
+.elderly button .lucide { width: 1.5rem; height: 1.5rem; }
+
+/* 老人模式隐藏非核心干扰元素 */
+.elderly .elderly-hide { display: none !important; }
+
+/* 辅助提示：默认隐藏，老人模式下自动显示 */
+.elderly-assist-hint { display: none; }
+.elderly .elderly-assist-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background-color: rgb(255 241 239);
+  border: 1px solid rgb(225 59 43 / 0.2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(169 35 26);
+}
+.dark.elderly .elderly-assist-hint {
+  background-color: rgb(62 30 28);
+  border: 1px solid rgb(232 106 90 / 0.3);
+  color: rgb(249 140 124);
+}
 
 /* ── 黑夜模式：背景白色 → 深色表面 ──────────────────────── */
 .dark .bg-white {

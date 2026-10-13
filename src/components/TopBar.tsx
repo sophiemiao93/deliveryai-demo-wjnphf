@@ -46,6 +46,7 @@ export function TopBar({ table, view, serviceCount, language, elderly, darkMode,
           <Button variant="outline" size="icon" onClick={onService} className="relative" aria-label={t('common.aria_service')}>
             <PhoneCall size={18} />{serviceCount > 0 && <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-chili-500" />}
           </Button>
+          {!elderly && (
           <Dialog>
             <DialogTrigger asChild><Button variant="outline" size="icon" aria-label={t('common.aria_member')}><UserRound size={18} /></Button></DialogTrigger>
             <DialogContent title={t('common.member_title')}>
@@ -59,7 +60,10 @@ export function TopBar({ table, view, serviceCount, language, elderly, darkMode,
               </div>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" size="icon" onClick={onConsole} aria-label={t('common.aria_console')}><LayoutDashboard size={18} /></Button>
+          )}
+          {!elderly && (
+            <Button variant="outline" size="icon" onClick={onConsole} aria-label={t('common.aria_console')}><LayoutDashboard size={18} /></Button>
+          )}
           <Button variant="outline" size="icon" onClick={onToggleElderly} aria-label={elderly ? '切换至常规模式' : '切换至老人模式'}>
             <Accessibility size={18} className={elderly ? 'text-chili-500' : ''} />
           </Button>
